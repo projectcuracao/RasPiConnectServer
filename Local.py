@@ -2,7 +2,7 @@
 # Filename: Local.py
 # Support for ProjectCuracao
 # MiloCreek JS MiloCreek
-# Version 1.0  9/7/2013
+# Version 2.0  11/4/2013
 #
 # Local Execute Objects for RasPiConnect  
 # to add Execute objects, modify this file 
@@ -34,6 +34,14 @@ import time
 import RPi.GPIO as GPIO
 import math
 import re
+
+# from ProjectCuracao
+sys.path.append('/home/pi/ProjectCuracao/main/hardware')
+sys.path.append('/home/pi/ProjectCuracao/main/actions')
+
+import useCamera
+import hardwareactions
+# end of Project Curacao files
 
 import MySQLdb as mdb
 
@@ -102,12 +110,131 @@ def ExecuteUserObjects(objectType, element):
                         	return outgoingXMLData
 
 			# not validate request, so execute
-
+			GPIO.setmode(GPIO.BOARD)
 			GPIO.setup(22, GPIO.OUT)
 			GPIO.output(22, False)
 			time.sleep(0.5)
 			GPIO.output(22, True)
 
+	
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+		
+		# B-3 - take normal picture (with shutter control) 
+		if (objectServerID == "B-3"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(22, GPIO.OUT)
+			GPIO.output(22, False)
+			time.sleep(0.5)
+			GPIO.output(22, True)
+
+			useCamera.takeSinglePicture("RasPiConnect - takeSinglePicture", 0.0)
+	
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-4 - do time lapse
+		if (objectServerID == "B-4"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(22, GPIO.OUT)
+			GPIO.output(22, False)
+			time.sleep(0.5)
+			GPIO.output(22, True)
+
+	
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-5 - Open Shutter 
+		if (objectServerID == "B-5"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(22, GPIO.OUT)
+			GPIO.output(22, False)
+			time.sleep(0.5)
+			GPIO.output(22, True)
+			
+			hardwareactions.openshutter()	
+	
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-6 -  take picture without shutters 
+		if (objectServerID == "B-6"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(22, GPIO.OUT)
+			GPIO.output(22, False)
+			time.sleep(0.5)
+			GPIO.output(22, True)
+
+			useCamera.takePicture("RasPiConnect Picture Only")
+	
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-7 - Close Shutter 
+		if (objectServerID == "B-7"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+			GPIO.setmode(GPIO.BOARD)
+			GPIO.setup(22, GPIO.OUT)
+			GPIO.output(22, False)
+			time.sleep(0.5)
+			GPIO.output(22, True)
+
+			hardwareactions.closeshutter()	
 	
 			responseData = "OK"
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
@@ -189,6 +316,7 @@ def ExecuteUserObjects(objectType, element):
 
                		lowername = objectName.lower()
 
+			GPIO.setmode(GPIO.BOARD)
 
                 	if (lowername == "turn fan on"):
 
@@ -275,6 +403,58 @@ def ExecuteUserObjects(objectType, element):
                                 f.close()
 
                                 responseData = "display lum/fan/bar"
+                                responseData = lowername.title()
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+                # FB-14 - change Arduino 
+                if (objectServerID == "FB-14"):
+
+                        #check for validate request
+                        # validate allows RasPiConnect to verify this object is here
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+                                return outgoingXMLData
+
+                        # not validate request, so execute
+
+                        responseData = "XXX"
+
+                        lowername = objectName.lower()
+
+
+                        if (lowername == "display currents"):
+
+                                responseData = "display voltages"
+                                responseData = responseData.title()
+
+
+                                f = open("./local/AGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+
+                        elif (lowername == "display voltages"):
+
+                                responseData = "display currents"
+                                responseData = responseData.title()
+
+                                f = open("./local/AGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        # defaults to display currents
+                        else:
+                                lowername = "display currents"
+                                f = open("./local/AGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                                responseData = "display voltages"
                                 responseData = lowername.title()
 
 
@@ -525,6 +705,8 @@ def ExecuteUserObjects(objectType, element):
         			print("Average analog reading: %3.3f "% average)
 
         			# convert the value to resistance
+				if (average == 0):
+					average = 1.0
         			average = (4096 / average) - 1
         			average = SERIESRESISTOR / average
 
@@ -617,6 +799,318 @@ def ExecuteUserObjects(objectType, element):
                         outgoingXMLData += BuildResponse.buildResponse(responseData)
                         outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
+
+
+
+		#LT-17 is Power into Arduino
+		
+		if (objectServerID == "LT-17"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT ArInputVoltage, ArInputCurrent FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+				current = result[1]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+
+			power =  (current * voltage) / 1000.0
+			myString = "%3.0fmA/%3.2fW" % (current, power)
+
+			responseData = "%s, %s, %s" % (myString, myString,"Power into Arduino")
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		#LT-18 is Power from Battery Arduino
+		if (objectServerID == "LT-18"):	
+
+                	#check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT BatteryOutputVoltage, BatteryOutputCurrent FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+				current = result[1]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			power =  (current * voltage) / 1000.0
+			myString = "%3.0fmA/%3.2fW" % (current, power)
+
+			responseData = "%s, %s, %s" % (myString, myString,"Power from Battery")
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		#LT-19 is Power from Solar Arduino
+		if (objectServerID == "LT-19"):	
+
+                	#check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+	
+                        	return outgoingXMLData
+	
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT SolarOutputVoltage, SolarOutputCurrent FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+				current = result[1]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+
+			if (current < 0):
+				current = 0
+			power =  (current * voltage) / 1000.0
+			myString = "%3.0fmA/%3.2fW" % (current, power)
+
+			responseData = "%s, %s, %s" % (myString, myString,"Power from Solar")
+
+	
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+
+
+		#LT-20 is % Battery left  Arduino
+		if (objectServerID == "LT-20"):	
+
+                	#check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+	
+                        	return outgoingXMLData
+	
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT BatteryOutputVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+
+			
+			# Using resistances and trip points from LiPo Pro v0.9 	
+			# all voltages after split compared to 2.5V 
+			percenthigh = 10
+			percentlow = 0
+
+
+			print "voltage = %3.3f" % voltage
+			print "low = %3.3f" %(voltage * 359.7/536.6) 
+			print "next = %3.3f" %(voltage * 355/536.6)
+			print "next = %3.3f" %(voltage * 345/536.6)
+			print "high = %3.3f" %(voltage * 330.7/536.6)
+			
+			if ((voltage * 359.7/536.6) > 2.5):
+				percenthigh = 30
+				percentlow = 10
+			if ((voltage * 355/536.6) > 2.5):
+				percenthigh = 60
+				percentlow = 30
+			if ((voltage * 345/536.6) > 2.5):
+				percenthigh = 90
+				percentlow = 60
+			if ((voltage * 330.7/536.6) > 2.5):
+				percenthigh = 100
+				percentlow = 90
+
+			print "percenthigh = %i percentlow=%i" % (percenthigh, percentlow)
+			
+			BatteryPackSize = 6000 #mAh size of batteries		
+			
+			mAhLeft = 6000 *(((percenthigh + percentlow)/2.0)/100.0)
+			myString = "%i-%i%%/~%imAh" % (percentlow, percenthigh, int(mAhLeft))
+
+			responseData = "%s, %s, %s" % (myString, myString,"Battery Remaining")
+
+	
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+
+
+		#LT-21 is % power efficiency for Arduino
+		if (objectServerID == "LT-21"):	
+
+                	#check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+	
+                        	return outgoingXMLData
+	
+
+			ina40 = INA219(0x40)
+			ina41 = INA219(0x41)
+			ina44 = INA219(0x44)
+			current40 = ina40.getCurrent_mA() # pi
+			current41 = ina41.getCurrent_mA() # battery
+			current44 = ina44.getCurrent_mA() # solar
+		
+			voltage40 = ina40.getBusVoltage_V()
+			voltage41 = ina41.getBusVoltage_V()
+			voltage44 = ina44.getBusVoltage_V()
+		
+			powerEfficiency = (current40*voltage40/(current41*voltage41+current44*voltage44))*100
+
+		        # if power Efficiency < 0, then must be plugged in so add 500ma @ 5V
+        		if (powerEfficiency < 0.0):
+                		powerEfficiency = (current40*voltage40/(current41*voltage41+current44*voltage44+5.0*500.0))*100
+
+
+
+			responseData = "%3.1f%%, %3.1f%%, %s" % (powerEfficiency, powerEfficiency,"Power Efficiency")
+
+	
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+
+		#LT-22 is Battery Temperature 
+		if (objectServerID == "LT-22"):	
+
+                	#check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+	
+                        	return outgoingXMLData
+			
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT BatteryTemperature FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				temperature = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+
+			responseData = "%3.1fC, %3.1fC, %s" % (temperature, temperature,"Battery Temperature")
+
+
+	
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
 
 
 	# object Type match
@@ -789,7 +1283,7 @@ def ExecuteUserObjects(objectType, element):
                         outgoingXMLData += BuildResponse.buildResponse(responseData)
                         outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
-
+		
                 #DHT-11 (to be DHT-22 in the full system)
                 if (objectServerID == "M-16"):
 
@@ -839,6 +1333,237 @@ def ExecuteUserObjects(objectType, element):
                         outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
 
+		# Arduino page
+
+                # Arduino Voltage
+                if (objectServerID == "M-17"):
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT ArInputVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % voltage
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+
+		# Arduino Battery Voltage
+		if (objectServerID == "M-18"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+			
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT BatteryOutputVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % voltage
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# Arduino Solar Cell
+		if (objectServerID == "M-19"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT SolarOutputVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % voltage
+			print "%s = %s" % (objectServerID, responseData)
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# Outside Temperature 
+		if (objectServerID == "M-20"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT OutsideTemperature FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				temperature = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % temperature
+			print "%s = %s" % (objectServerID, responseData)
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# Outside Humidity
+		if (objectServerID == "M-21"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT OutsideHumidity FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				humidity = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % humidity
+			print "%s = %s" % (objectServerID, responseData)
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		#  M-22 show servo location
+		if (objectServerID == "M-22"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+			servoValue = hardwareactions.readCameraServo()
+			responseData = "%4.1f" % servoValue
+			print "%s = %s" % (objectServerID, responseData)
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
 
 
 	# object Type match
@@ -848,7 +1573,7 @@ def ExecuteUserObjects(objectType, element):
 			print "BARMETER_UITYPE of %s found" % objectServerID
 
 
-		#M-10 is Pi Voltage
+		#BR-10 is Pi Battery 
 		if (objectServerID == "BR-10"):	
 
         	        #check for validate request
@@ -860,6 +1585,74 @@ def ExecuteUserObjects(objectType, element):
 
                         ina41 = INA219(0x41)
                         voltage = ina41.getBusVoltage_V()
+
+                        # Using resistances and trip points from LiPo Pro v0.9
+                        # all voltages after split compared to 2.5V
+                        percenthigh = 10
+                        percentlow = 0
+
+                        print "voltage = %3.3f" % voltage
+                        print "low = %3.3f" %(voltage * 359.7/536.6) 
+                        print "next = %3.3f" %(voltage * 355/536.6)
+                        print "next = %3.3f" %(voltage * 345/536.6)
+                        print "high = %3.3f" %(voltage * 330.7/536.6)
+                        
+                        if ((voltage * 359.7/536.6) > 2.5):
+                                percenthigh = 30
+                                percentlow = 10
+                        if ((voltage * 355/536.6) > 2.5):
+                                percenthigh = 60
+                                percentlow = 30
+                        if ((voltage * 345/536.6) > 2.5):
+                                percenthigh = 90
+                                percentlow = 60
+                        if ((voltage * 330.7/536.6) > 2.5):
+                                percenthigh = 100
+                                percentlow = 90
+
+
+
+                        responseData = "%s" % ( percenthigh/10.0 )
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		#BR-11 is Arduino Battery 
+		if (objectServerID == "BR-11"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT BatteryOutputVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
 
                         # Using resistances and trip points from LiPo Pro v0.9
                         # all voltages after split compared to 2.5V
@@ -949,7 +1742,6 @@ def ExecuteUserObjects(objectType, element):
                 	responseData += "static/"
                 	responseData += imageName
                 	responseData += "\" type=\"jpg\" width=\"800\" height=\"300\">"
-                	responseData += "<BR>Picture<BR>"
 
                 	responseData +="</body>"
 	
@@ -989,7 +1781,6 @@ def ExecuteUserObjects(objectType, element):
                 	responseData += "static/"
                 	responseData += imageName
                 	responseData += "\" type=\"jpg\" width=\"800\" height=\"300\">"
-                	responseData += "<BR>Picture<BR>"
 
                 	responseData +="</body>"
 	
@@ -1051,7 +1842,6 @@ def ExecuteUserObjects(objectType, element):
                         responseData += "static/"
                         responseData += imageName
                         responseData += "\" type=\"jpg\" width=\"585\" height=\"300\">"
-                        responseData += "<BR>Picture<BR>"
 
                         responseData +="</body>"
 
@@ -1064,10 +1854,150 @@ def ExecuteUserObjects(objectType, element):
                         outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
 
+                #W-15 is latest pi camera picture
+                if (objectServerID == "W-15"):
+
+                        #check for validate request
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+
+                                return outgoingXMLData
+
+                        # normal response requested
+
+			imageName = "picamera.jpg"
+
+
+                        responseData = "<html><head>"
+                        responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+                        responseData += "</head>"
+
+                        responseData += "<body><img src=\""
+                        responseData += Config.localURL()
+                        responseData += "static/"
+                        responseData += imageName
+                        responseData += "\" type=\"jpg\" width=\"585\" height=\"300\">"
+
+                        responseData +="</body>"
+
+                        responseData += "</html>"
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+
+
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+	if (objectType == REMOTE_WEBVIEW_UITYPE):
+
+		if (Config.debug()):
+			print "REMOTE_WEBVIEW_UITYPE of %s found" % objectServerID
+
+
+
+                #W-13 is Arduino Current and Voltage
+                if (objectServerID == "W-13"):
+
+                        #check for validate request
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+
+                                return outgoingXMLData
+
+                        # normal response requested
+
+
+
+                        lowername = "display currents"
+
+                        try:
+                                f = open("./local/AGraphSelect.txt", "r")
+                                tempString = f.read()
+                                f.close()
+                                lowername = tempString
+
+                        except IOError as e:
+                                print "I/O error({0}): {1}".format(e.errno, e.strerror)
+
+
+                        print "lowername=", lowername
+                        if (lowername == "display currents"):
+
+				imageName = "batterywatchdogcurrent.png"
+
+                        elif (lowername == "display voltages"):
+
+				imageName = "batterywatchdogvoltage.png"
+
+                        else:
+				imageName = "batterywatchdogcurrent.png"
+
+
+
+                        responseData = "<html><head>"
+                        responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+                        responseData += "</head>"
+
+                        responseData += "<body><img src=\""
+                        responseData += Config.localURL()
+                        responseData += "static/"
+                        responseData += imageName
+                        responseData += "\" type=\"jpg\" width=\"585\" height=\"300\">"
+
+                        responseData +="</body>"
+
+                        responseData += "</html>"
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+
+
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+                #W-14 is Arduino Log 
+                if (objectServerID == "W-14"):
+
+                        #check for validate request
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+
+                                return outgoingXMLData
+
+
+
+                        # normal response requested
+
+                        responseData = "<html><head>"
+                        responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+                        responseData += "</head>"
+
+                        responseData += "<body>"
+			responseData += "<BR><BR>arduino Log"
+                        responseData +="</body>"
+
+                        responseData += "</html>"
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+
+
+
+
 	# object Type match
 	if (objectType == SINGLE_LED_DISPLAY_UITYPE):
 		if (Config.debug()):
 			print "SINGLE_LED_DISPLAY_UITYPE of %s found" % objectServerID
+
+
+
 
 
 	        # L-10 sends back the current state of the Fan 
@@ -1103,6 +2033,36 @@ def ExecuteUserObjects(objectType, element):
 			outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
 
+	        # L-11 shutter state 
+       		if (objectServerID == "L-11"):
+
+               		#check for validate request
+               		if (validate == "YES"):
+                       		outgoingXMLData += Validate.buildValidateResponse("YES")
+                       		outgoingXMLData += BuildResponse.buildFooter()
+	
+                       		return outgoingXMLData
+
+			servoValue = hardwareactions.readCameraServo()
+
+			# assume in middle (Green, yellow, red)
+			ledoutput = 6 # Yellow		
+
+			if (servoValue < 1100):
+				print "shutter open"
+				ledoutput = 2
+			
+			if (servoValue > 1650):
+				print "shutter open"
+				ledoutput = 5
+	
+	                responseData = "%i" % ledoutput
+
+
+               		outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        
+			outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
 
 
 	else:
