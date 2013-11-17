@@ -25,6 +25,7 @@ FM_BLINK_LED_UITYPE = 2048
 TEXT_DISPLAY_UITYPE = 4096
 TOGGLE_SWITCH_UITYPE = 33
 SEND_TEXT_UITYPE = 34
+SOUND_ALARM_UITYPE = 35
 
 
 # system imports
@@ -38,9 +39,11 @@ import re
 # from ProjectCuracao
 sys.path.append('/home/pi/ProjectCuracao/main/hardware')
 sys.path.append('/home/pi/ProjectCuracao/main/actions')
+sys.path.append('/home/pi/ProjectCuracao/main/util')
 
 import useCamera
 import hardwareactions
+import util
 # end of Project Curacao files
 
 import MySQLdb as mdb
@@ -241,6 +244,152 @@ def ExecuteUserObjects(objectType, element):
       			outgoingXMLData += BuildResponse.buildFooter()
                 	return outgoingXMLData
 	
+		# B-8 - Display High and Lows 
+		if (objectServerID == "B-8"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			print "set W-16 state B-8"
+                        f = open("./local/SumPageGraphSelect.txt", "w")
+                        f.write("display hi/low")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-9 - Display Daily High and Lows 
+		if (objectServerID == "B-9"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			print "set W-16 state B-9"
+                        f = open("./local/SumPageGraphSelect.txt", "w")
+                        f.write("daily hi/low")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
+		# B-10 -  System Logs
+		if (objectServerID == "B-10"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			print "set W-16 state B-10"
+                        f = open("./local/SumPageGraphSelect.txt", "w")
+                        f.write("System Logs")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-11 -  Trigger Alarm SU-1 
+		if (objectServerID == "B-11"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
+                        f = open("/home/pi/ProjectCuracao/main/state/SU-1.txt", "w")
+                        f.write("alarm 1, Reason1-1,YES, 1005, 1, 10")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-12 -  Clear Alarm SU-1 
+		if (objectServerID == "B-12"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+                        f = open("/home/pi/ProjectCuracao/main/state/SU-1.txt", "w")
+			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
+                        f.write("alarm 1, Reason1-1,NO, 1005, 1, 10")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
+		# B-13 -  Trigger Alarm SU-2 
+		if (objectServerID == "B-13"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
+                        f = open("/home/pi/ProjectCuracao/main/state/SU-2.txt", "w")
+                        f.write("alarm 2, Reason2-1,YES, 1005, 1, 10")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-14 -  Clear Alarm SU-2 
+		if (objectServerID == "B-14"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
+                        f = open("/home/pi/ProjectCuracao/main/state/SU-2.txt", "w")
+                        f.write("alarm 2, Reason2-1,NO, 1005, 1, 10")
+                        f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
 	# object Type match
 	if (objectType == FEEDBACK_ACTION_BUTTON_UITYPE):
 
@@ -262,6 +411,8 @@ def ExecuteUserObjects(objectType, element):
 
                		responseData = "XXX"
 
+			if (objectName is None):
+				objectName = "XXX"
                		lowername = objectName.lower()
 
 
@@ -313,6 +464,8 @@ def ExecuteUserObjects(objectType, element):
 			# not validate request, so execute
 
                		responseData = "XXX"
+			if (objectName is None):
+				objectName = "XXX"
 
                		lowername = objectName.lower()
 
@@ -372,6 +525,8 @@ def ExecuteUserObjects(objectType, element):
 
                         responseData = "XXX"
 
+			if (objectName is None):
+				objectName = "XXX"
                         lowername = objectName.lower()
 
 
@@ -424,6 +579,8 @@ def ExecuteUserObjects(objectType, element):
 
                         responseData = "XXX"
 
+			if (objectName is None):
+				objectName = "XXX"
                         lowername = objectName.lower()
 
 
@@ -463,6 +620,115 @@ def ExecuteUserObjects(objectType, element):
                         return outgoingXMLData
 
 	
+                # FB-15 - summary page complex graph chart 
+                if (objectServerID == "FB-15"):
+
+                        #check for validate request
+                        # validate allows RasPiConnect to verify this object is here
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+                                return outgoingXMLData
+
+                        # not validate request, so execute
+
+
+                        responseData = "XXX"
+
+			if (objectName is None):
+				objectName = "XXX"
+                        lowername = objectName.lower()
+
+
+                        if (lowername == "env temp/hum"):
+
+                                responseData = "env lum/fan/bar"
+                                responseData = responseData.title()
+
+
+                        	f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+
+                        elif (lowername == "env lum/fan/bar"):
+
+                                responseData = "pi power volts"
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "pi power volts"):
+
+                                responseData = "pi power currents"
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "pi power currents"):
+
+                                responseData = "pi system stats"
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "pi system stats"):
+
+                                responseData = "watchdog volts"
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "watchdog volts"):
+
+                                responseData = "watchdog currents"
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "watchdog currents"):
+
+                                responseData = "env temp/hum" 
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        # defaults to display currents
+                        else:
+                                
+				f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                                responseData = "env temp/hum" 
+                                responseData = lowername.title()
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+	
+	# object Type match
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
+	
+	# object Type match
 	# object Type match
 	if (objectType == TEXT_DISPLAY_UITYPE):
 
@@ -528,7 +794,7 @@ def ExecuteUserObjects(objectType, element):
 			ina44 = INA219(0x44)
 			current = ina44.getCurrent_mA()
 			voltage = ina44.getBusVoltage_V()
-
+			
 			if (current < 0):
 				current = 0
 			power =  (current * voltage) / 1000.0
@@ -557,37 +823,14 @@ def ExecuteUserObjects(objectType, element):
 			ina41 = INA219(0x41)
 			voltage = ina41.getBusVoltage_V()
 			
-			# Using resistances and trip points from LiPo Pro v0.9 	
-			# all voltages after split compared to 2.5V 
-			percenthigh = 10
-			percentlow = 0
 
+			percent = util.returnPercentLeftInBattery(voltage, 4.226)
 
-			print "voltage = %3.3f" % voltage
-			print "low = %3.3f" %(voltage * 359.7/536.6) 
-			print "next = %3.3f" %(voltage * 355/536.6)
-			print "next = %3.3f" %(voltage * 345/536.6)
-			print "high = %3.3f" %(voltage * 330.7/536.6)
-			
-			if ((voltage * 359.7/536.6) > 2.5):
-				percenthigh = 30
-				percentlow = 10
-			if ((voltage * 355/536.6) > 2.5):
-				percenthigh = 60
-				percentlow = 30
-			if ((voltage * 345/536.6) > 2.5):
-				percenthigh = 90
-				percentlow = 60
-			if ((voltage * 330.7/536.6) > 2.5):
-				percenthigh = 100
-				percentlow = 90
-
-			print "percenthigh = %i percentlow=%i" % (percenthigh, percentlow)
 			
 			BatteryPackSize = 6000 #mAh size of batteries		
 			
-			mAhLeft = 6000 *(((percenthigh + percentlow)/2.0)/100.0)
-			myString = "%i-%i%%/~%imAh" % (percentlow, percenthigh, int(mAhLeft))
+			mAhLeft = BatteryPackSize *(percent/100.0)
+			myString = "%i%%~%imAh" % (percent, int(mAhLeft))
 
 			responseData = "%s, %s, %s" % (myString, myString,"Battery Remaining")
 
@@ -615,7 +858,9 @@ def ExecuteUserObjects(objectType, element):
 			current40 = ina40.getCurrent_mA() # pi
 			current41 = ina41.getCurrent_mA() # battery
 			current44 = ina44.getCurrent_mA() # solar
-		
+	
+			shunt44 = ina44.getShuntVoltage_mV()
+			print "44 shunt Voltage =", shunt44
 			voltage40 = ina40.getBusVoltage_V()
 			voltage41 = ina41.getBusVoltage_V()
 			voltage44 = ina44.getBusVoltage_V()
@@ -986,37 +1231,14 @@ def ExecuteUserObjects(objectType, element):
 
 
 			
-			# Using resistances and trip points from LiPo Pro v0.9 	
-			# all voltages after split compared to 2.5V 
-			percenthigh = 10
-			percentlow = 0
 
+			percent = util.returnPercentLeftInBattery(voltage, 4.04)
 
-			print "voltage = %3.3f" % voltage
-			print "low = %3.3f" %(voltage * 359.7/536.6) 
-			print "next = %3.3f" %(voltage * 355/536.6)
-			print "next = %3.3f" %(voltage * 345/536.6)
-			print "high = %3.3f" %(voltage * 330.7/536.6)
-			
-			if ((voltage * 359.7/536.6) > 2.5):
-				percenthigh = 30
-				percentlow = 10
-			if ((voltage * 355/536.6) > 2.5):
-				percenthigh = 60
-				percentlow = 30
-			if ((voltage * 345/536.6) > 2.5):
-				percenthigh = 90
-				percentlow = 60
-			if ((voltage * 330.7/536.6) > 2.5):
-				percenthigh = 100
-				percentlow = 90
-
-			print "percenthigh = %i percentlow=%i" % (percenthigh, percentlow)
 			
 			BatteryPackSize = 6000 #mAh size of batteries		
 			
-			mAhLeft = 6000 *(((percenthigh + percentlow)/2.0)/100.0)
-			myString = "%i-%i%%/~%imAh" % (percentlow, percenthigh, int(mAhLeft))
+			mAhLeft = BatteryPackSize *(percent/100.0)
+			myString = "%i%%/~%imAh" % (percent, int(mAhLeft))
 
 			responseData = "%s, %s, %s" % (myString, myString,"Battery Remaining")
 
@@ -1038,22 +1260,54 @@ def ExecuteUserObjects(objectType, element):
                         	return outgoingXMLData
 	
 
-			ina40 = INA219(0x40)
-			ina41 = INA219(0x41)
-			ina44 = INA219(0x44)
-			current40 = ina40.getCurrent_mA() # pi
-			current41 = ina41.getCurrent_mA() # battery
-			current44 = ina44.getCurrent_mA() # solar
+			#current40 = ina40.getCurrent_mA() # pi
+			#current41 = ina41.getCurrent_mA() # battery
+			#current44 = ina44.getCurrent_mA() # solar
+
+			ArVoltage = 0.0
+			ArCurrent = 0.0
+			BatVoltage = 0.0
+			BatCurrent = 0.0
+			SolVoltage = 0.0
+			SolCurrent = 0.0
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
 		
-			voltage40 = ina40.getBusVoltage_V()
-			voltage41 = ina41.getBusVoltage_V()
-			voltage44 = ina44.getBusVoltage_V()
+                		cursor = db.cursor()
+
+
+				query = "SELECT ArInputVoltage, ArInputCurrent, BatteryOutputVoltage, BatteryOutputCurrent, SolarOutputVoltage, SolarOutputCurrent FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+
+				ArVoltage = result[0]
+				ArCurrent = result[1]
+	
+				BatVoltage = result[2]
+				BatCurrent = result[3]
+	
+				SolVoltage = result[4]
+				SolCurrent = result[5]
+	
+        		except mdb.Error, e:
 		
-			powerEfficiency = (current40*voltage40/(current41*voltage41+current44*voltage44))*100
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+		
+			powerEfficiency = (ArVoltage*ArCurrent/(BatVoltage*BatCurrent+SolVoltage*SolCurrent))*100
 
 		        # if power Efficiency < 0, then must be plugged in so add 500ma @ 5V
         		if (powerEfficiency < 0.0):
-                		powerEfficiency = (current40*voltage40/(current41*voltage41+current44*voltage44+5.0*500.0))*100
+				powerEfficiency = (ArVoltage*ArCurrent/(BatVoltage*BatCurrent+SolVoltage*SolCurrent+5.0*500))*100
 
 
 
@@ -1586,33 +1840,14 @@ def ExecuteUserObjects(objectType, element):
                         ina41 = INA219(0x41)
                         voltage = ina41.getBusVoltage_V()
 
-                        # Using resistances and trip points from LiPo Pro v0.9
-                        # all voltages after split compared to 2.5V
-                        percenthigh = 10
-                        percentlow = 0
+			
+			
 
-                        print "voltage = %3.3f" % voltage
-                        print "low = %3.3f" %(voltage * 359.7/536.6) 
-                        print "next = %3.3f" %(voltage * 355/536.6)
-                        print "next = %3.3f" %(voltage * 345/536.6)
-                        print "high = %3.3f" %(voltage * 330.7/536.6)
-                        
-                        if ((voltage * 359.7/536.6) > 2.5):
-                                percenthigh = 30
-                                percentlow = 10
-                        if ((voltage * 355/536.6) > 2.5):
-                                percenthigh = 60
-                                percentlow = 30
-                        if ((voltage * 345/536.6) > 2.5):
-                                percenthigh = 90
-                                percentlow = 60
-                        if ((voltage * 330.7/536.6) > 2.5):
-                                percenthigh = 100
-                                percentlow = 90
+			percent = util.returnPercentLeftInBattery(voltage, 4.226)
 
+			
 
-
-                        responseData = "%s" % ( percenthigh/10.0 )
+                        responseData = "%s" % ( percent/10.0 )
 
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
       			outgoingXMLData += BuildResponse.buildFooter()
@@ -1654,37 +1889,18 @@ def ExecuteUserObjects(objectType, element):
                 		del db
 
 
-                        # Using resistances and trip points from LiPo Pro v0.9
-                        # all voltages after split compared to 2.5V
-                        percenthigh = 10
-                        percentlow = 0
 
-                        print "voltage = %3.3f" % voltage
-                        print "low = %3.3f" %(voltage * 359.7/536.6) 
-                        print "next = %3.3f" %(voltage * 355/536.6)
-                        print "next = %3.3f" %(voltage * 345/536.6)
-                        print "high = %3.3f" %(voltage * 330.7/536.6)
-                        
-                        if ((voltage * 359.7/536.6) > 2.5):
-                                percenthigh = 30
-                                percentlow = 10
-                        if ((voltage * 355/536.6) > 2.5):
-                                percenthigh = 60
-                                percentlow = 30
-                        if ((voltage * 345/536.6) > 2.5):
-                                percenthigh = 90
-                                percentlow = 60
-                        if ((voltage * 330.7/536.6) > 2.5):
-                                percenthigh = 100
-                                percentlow = 90
+			percent = util.returnPercentLeftInBattery(voltage, 4.04) 
 
 
-
-                        responseData = "%s" % ( percenthigh/10.0 )
+                        responseData = "%s" % ( percent/10.0 )
 
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
       			outgoingXMLData += BuildResponse.buildFooter()
                 	return outgoingXMLData
+
+
+
 
 	# object Type match
 	if (objectType == PICTURE_REMOTE_WEBVIEW_UITYPE):
@@ -1988,8 +2204,552 @@ def ExecuteUserObjects(objectType, element):
                         return outgoingXMLData
 
 
+                #W-16 is many things, but first high / low temp
+                if (objectServerID == "W-16"):
+
+                        #check for validate request
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+
+                                return outgoingXMLData
+
+			print "executing W-16"
+       			try:
+
+                        	f = open("./local/SumPageGraphSelect.txt", "r")
+                		graphName = f.read()
+                		f.close()
+       			except IOError as e:
+               			graphName = "display hi/low"
+
+			graphName = graphName.lower()
+			responseData = ""
+
+			print "executing ", graphName
+
+			if (graphName == "display hi/low"):
+				# generate low-high data
+
+			
+				# calculate high and lows
+				# high and low inside temperatures
+				# high and low outside temperatures
+				# high and low barometric pressure
+				# high and low air speed
+	
+				
+		        	try:
+                			print("trying database")
+                			db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+			
+                			cursor = db.cursor()
+	
+					# temperature
+					query = "SELECT TimeStamp, InsideTemperature FROM environmentaldata ORDER BY InsideTemperature ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowInsideTemperatureTimeStamp = result[0]
+					lowInsideTemperature = result[1]
+	
+					query = "SELECT TimeStamp, InsideTemperature FROM environmentaldata ORDER BY InsideTemperature DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highInsideTemperatureTimeStamp = result[0]
+					highInsideTemperature = result[1]
+	
+					query = "SELECT TimeStamp, OutsideTemperature FROM environmentaldata ORDER BY OutsideTemperature ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowOutsideTemperatureTimeStamp = result[0]
+					lowOutsideTemperature = result[1]
+	
+					query = "SELECT TimeStamp, OutsideTemperature FROM environmentaldata ORDER BY OutsideTemperature DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highOutsideTemperatureTimeStamp = result[0]
+					highOutsideTemperature = result[1]
+	
+					# humidity
+					query = "SELECT TimeStamp, InsideHumidity FROM environmentaldata ORDER BY InsideHumidity ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowInsideHumidityTimeStamp = result[0]
+					lowInsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, InsideHumidity FROM environmentaldata ORDER BY InsideHumidity DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highInsideHumidityTimeStamp = result[0]
+					highInsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, OutsideHumidity FROM environmentaldata ORDER BY OutsideHumidity ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowOutsideHumidityTimeStamp = result[0]
+					lowOutsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, OutsideHumidity FROM environmentaldata ORDER BY OutsideHumidity DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highOutsideHumidityTimeStamp = result[0]
+					highOutsideHumidity = result[1]
+	
+					# barometric pressure
+					query = "SELECT TimeStamp, BarometricPressure FROM environmentaldata ORDER BY BarometricPressure ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowBarometricPressureTimeStamp = result[0]
+					lowBarometricPressure = result[1]
+	
+					query = "SELECT TimeStamp, BarometricPressure FROM environmentaldata ORDER BY BarometricPressure DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highBarometricPressureTimeStamp = result[0]
+					highBarometricPressure = result[1]
+	
+	
+	
+	
+					# airspeed
+					query = "SELECT TimeStamp, AirSpeed FROM environmentaldata ORDER BY AirSpeed ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowAirSpeedTimeStamp = result[0]
+					lowAirSpeed = result[1]
+	
+					query = "SELECT TimeStamp, AirSpeed FROM environmentaldata ORDER BY AirSpeed DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highAirSpeedTimeStamp = result[0]
+					highAirSpeed = result[1]
+	
+        			except mdb.Error, e:
+			
+                			print "Error %d: %s" % (e.args[0],e.args[1])
+	
+					lowInsideTemperatureTimeStamp = ""
+					lowInsideTemperature = 0.0
+	
+					highInsideTemperatureTimeStamp = ""
+					highInsideTemperature = 0.0
+	
+					lowOutsideTemperatureTimeStamp = ""
+					lowOutsideTemperature = 0.0
+	
+					highOutsideTemperatureTimeStamp = ""
+					highOutsideTemperature = 0.0
+	
+					lowInsideHumidityTimeStamp = ""
+					lowInsideHumidity = 0.0
+	
+					highInsideHumidityTimeStamp = ""
+					highInsideHumidity = 0.0
+	
+					lowOutsideHumidityTimeStamp = ""
+					lowOutsideHumidity = 0.0
+	
+					highOutsideHumidityTimeStamp = ""
+					highOutsideHumidity = 0.0
+	
+					lowBarometricPressureTimeStamp = ""
+					lowBarometricPressure = 0.0
+	
+					highBarometricPressureTimeStamp = ""
+					highBarometricPressure = 0.0
+
+					lowAirSpeedTimeStamp = ""
+					lowAirSpeed = 0.0
+	
+					highAirSpeedTimeStamp = ""
+					highAirSpeed = 0.0
+	
+        			finally:
+			
+                			cursor.close()
+                			db.close()
+			
+                			del cursor
+                			del db
+	
+	
+				print "lowInsideTemperature = %3.2f DateTime=%s" % (lowInsideTemperature, lowInsideTemperatureTimeStamp)
+				print "highInsideTemperature = %3.2f DateTime=%s" % (highInsideTemperature, highInsideTemperatureTimeStamp)
+				print "lowOutsideTemperature = %3.2f DateTime=%s" % (lowOutsideTemperature, lowOutsideTemperatureTimeStamp)
+				print "highOutsideTemperature = %3.2f DateTime=%s" % (highOutsideTemperature, highOutsideTemperatureTimeStamp)
+				print
+	
+				print "lowInsideHumidity = %3.2f DateTime=%s" % (lowInsideHumidity, lowInsideHumidityTimeStamp)
+				print "highInsideHumidity = %3.2f DateTime=%s" % (highInsideHumidity, highInsideHumidityTimeStamp)
+				print "lowOutsideHumidity = %3.2f DateTime=%s" % (lowOutsideHumidity, lowOutsideHumidityTimeStamp)
+				print "highOutsideHumidity = %3.2f DateTime=%s" % (highOutsideHumidity, highOutsideHumidityTimeStamp)
+				print
+	
+				print "lowBarometricPressure = %3.2f DateTime=%s" % (lowBarometricPressure, lowBarometricPressureTimeStamp)
+				print "highBarometricPressure = %3.2f DateTime=%s" % (highBarometricPressure, highBarometricPressureTimeStamp)
+				print
+	
+				print "lowAirSpeed = %3.2f DateTime=%s" % (lowAirSpeed, lowAirSpeedTimeStamp)
+				print "highAirSpeed = %3.2f DateTime=%s" % (highAirSpeed, highAirSpeedTimeStamp)
+				print
+				# read an HTML template into aw string		
+	
+				responseData = ""
+				with open ("./Templates/W-16-HL.html", "r") as myfile:
+    					responseData += myfile.read().replace('\n', '')
+		
+				title = "Environmental All Time High and Lows (UTC Time)"	
+				responseData = responseData.replace("HLTITLE", title)	
+				# now replace the OTH, OTTSH, etc with the right data
+				responseData = responseData.replace("OTH", str(highOutsideTemperature))	
+				responseData = responseData.replace("OTTSH", str(highOutsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("OTL", str(lowOutsideTemperature))
+				responseData = responseData.replace("OTTSL", str(lowOutsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("ITH", str(highInsideTemperature))	
+				responseData = responseData.replace("ITTSH", str(highInsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("ITL", str(lowInsideTemperature))
+				responseData = responseData.replace("ITTSL", str(lowInsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("OHH", str(highOutsideHumidity))	
+				responseData = responseData.replace("OHTSH", str(highOutsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("OHL", str(lowOutsideHumidity))	
+				responseData = responseData.replace("OHTSL", str(lowOutsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("IHH", str(highInsideHumidity)	)
+				responseData = responseData.replace("IHTSH", str(highInsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("IHL", str(lowInsideHumidity)	)
+				responseData = responseData.replace("IHTSL", str(lowInsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("BPTH", str(highBarometricPressure)	)
+				responseData = responseData.replace("BPTTSH", str(highBarometricPressureTimeStamp))	
+	
+				responseData = responseData.replace("BPTL", str(lowBarometricPressure)	)
+				responseData = responseData.replace("BPTTSL", str(lowBarometricPressureTimeStamp))	
+				
+				responseData = responseData.replace("WSTH", str(highAirSpeed)	)
+				responseData = responseData.replace("WSTTSH", str(highAirSpeedTimeStamp))	
+	
+				responseData = responseData.replace("WSTL", str(lowAirSpeed)	)
+				responseData = responseData.replace("WSTTSL", str(lowAirSpeedTimeStamp))	
+	
+
+			if (graphName == "daily hi/low"):
+				# generate low-high data
+
+			
+				# calculate high and lows
+				# high and low inside temperatures
+				# high and low outside temperatures
+				# high and low barometric pressure
+				# high and low air speed
+	
+				
+		        	try:
+                			print("trying database")
+                			db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+			
+                			cursor = db.cursor()
+					#SELECT TIMESTAMP, InsideTemperature FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY InsideTemperature ASC 
+					# temperature
+					query = "SELECT TimeStamp, InsideTemperature FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY InsideTemperature ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowInsideTemperatureTimeStamp = result[0]
+					lowInsideTemperature = result[1]
+	
+					query = "SELECT TimeStamp, InsideTemperature FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY InsideTemperature DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highInsideTemperatureTimeStamp = result[0]
+					highInsideTemperature = result[1]
+
+					query = "SELECT TimeStamp, OutsideTemperature FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY OutsideTemperature ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowOutsideTemperatureTimeStamp = result[0]
+					lowOutsideTemperature = result[1]
+	
+					query = "SELECT TimeStamp, OutsideTemperature FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY OutsideTemperature DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highOutsideTemperatureTimeStamp = result[0]
+					highOutsideTemperature = result[1]
+	
+					# humidity
+					query = "SELECT TimeStamp, InsideHumidity FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY InsideHumidity ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowInsideHumidityTimeStamp = result[0]
+					lowInsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, InsideHumidity FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY InsideHumidity DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highInsideHumidityTimeStamp = result[0]
+					highInsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, OutsideHumidity FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY OutsideHumidity ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowOutsideHumidityTimeStamp = result[0]
+					lowOutsideHumidity = result[1]
+	
+					query = "SELECT TimeStamp, OutsideHumidity FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY OutsideHumidity DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highOutsideHumidityTimeStamp = result[0]
+					highOutsideHumidity = result[1]
+	
+					# barometric pressure
+					query = "SELECT TimeStamp, BarometricPressure FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY BarometricPressure ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowBarometricPressureTimeStamp = result[0]
+					lowBarometricPressure = result[1]
+	
+					query = "SELECT TimeStamp, BarometricPressure FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY BarometricPressure DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highBarometricPressureTimeStamp = result[0]
+					highBarometricPressure = result[1]
+	
+	
+	
+	
+					# airspeed
+					query = "SELECT TimeStamp, AirSpeed FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY AirSpeed ASC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					lowAirSpeedTimeStamp = result[0]
+					lowAirSpeed = result[1]
+	
+					query = "SELECT TimeStamp, AirSpeed FROM environmentaldata WHERE DATE_ADD(CURDATE( ) , INTERVAL - 4 HOUR) < TIMESTAMP ORDER BY AirSpeed DESC LIMIT 1"
+                			cursor.execute(query)
+                			result = cursor.fetchone()
+					highAirSpeedTimeStamp = result[0]
+					highAirSpeed = result[1]
+	
+        			except mdb.Error, e:
+			
+                			print "Error %d: %s" % (e.args[0],e.args[1])
+	
+					lowInsideTemperatureTimeStamp = ""
+					lowInsideTemperature = 0.0
+	
+					highInsideTemperatureTimeStamp = ""
+					highInsideTemperature = 0.0
+	
+					lowOutsideTemperatureTimeStamp = ""
+					lowOutsideTemperature = 0.0
+	
+					highOutsideTemperatureTimeStamp = ""
+					highOutsideTemperature = 0.0
+	
+					lowInsideHumidityTimeStamp = ""
+					lowInsideHumidity = 0.0
+	
+					highInsideHumidityTimeStamp = ""
+					highInsideHumidity = 0.0
+	
+					lowOutsideHumidityTimeStamp = ""
+					lowOutsideHumidity = 0.0
+	
+					highOutsideHumidityTimeStamp = ""
+					highOutsideHumidity = 0.0
+	
+					lowBarometricPressureTimeStamp = ""
+					lowBarometricPressure = 0.0
+	
+					highBarometricPressureTimeStamp = ""
+					highBarometricPressure = 0.0
+
+					lowAirSpeedTimeStamp = ""
+					lowAirSpeed = 0.0
+	
+					highAirSpeedTimeStamp = ""
+					highAirSpeed = 0.0
+	
+        			finally:
+			
+                			cursor.close()
+                			db.close()
+			
+                			del cursor
+                			del db
+	
+	
+				print "lowInsideTemperature = %3.2f DateTime=%s" % (lowInsideTemperature, lowInsideTemperatureTimeStamp)
+				print "highInsideTemperature = %3.2f DateTime=%s" % (highInsideTemperature, highInsideTemperatureTimeStamp)
+				print "lowOutsideTemperature = %3.2f DateTime=%s" % (lowOutsideTemperature, lowOutsideTemperatureTimeStamp)
+				print "highOutsideTemperature = %3.2f DateTime=%s" % (highOutsideTemperature, highOutsideTemperatureTimeStamp)
+				print
+	
+				print "lowInsideHumidity = %3.2f DateTime=%s" % (lowInsideHumidity, lowInsideHumidityTimeStamp)
+				print "highInsideHumidity = %3.2f DateTime=%s" % (highInsideHumidity, highInsideHumidityTimeStamp)
+				print "lowOutsideHumidity = %3.2f DateTime=%s" % (lowOutsideHumidity, lowOutsideHumidityTimeStamp)
+				print "highOutsideHumidity = %3.2f DateTime=%s" % (highOutsideHumidity, highOutsideHumidityTimeStamp)
+				print
+	
+				print "lowBarometricPressure = %3.2f DateTime=%s" % (lowBarometricPressure, lowBarometricPressureTimeStamp)
+				print "highBarometricPressure = %3.2f DateTime=%s" % (highBarometricPressure, highBarometricPressureTimeStamp)
+				print
+	
+				print "lowAirSpeed = %3.2f DateTime=%s" % (lowAirSpeed, lowAirSpeedTimeStamp)
+				print "highAirSpeed = %3.2f DateTime=%s" % (highAirSpeed, highAirSpeedTimeStamp)
+				print
+				# read an HTML template into aw string		
+	
+				responseData = ""
+				with open ("./Templates/W-16-HL.html", "r") as myfile:
+    					responseData += myfile.read().replace('\n', '')
+		
+	
+				title = "Environmental Daily High and Lows (UTC Time - Curacao Day)"	
+				responseData = responseData.replace("HLTITLE", title)	
+				# now replace the OTH, OTTSH, etc with the right data
+				responseData = responseData.replace("OTH", str(highOutsideTemperature))	
+				responseData = responseData.replace("OTTSH", str(highOutsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("OTL", str(lowOutsideTemperature))
+				responseData = responseData.replace("OTTSL", str(lowOutsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("ITH", str(highInsideTemperature))	
+				responseData = responseData.replace("ITTSH", str(highInsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("ITL", str(lowInsideTemperature))
+				responseData = responseData.replace("ITTSL", str(lowInsideTemperatureTimeStamp))	
+	
+				responseData = responseData.replace("OHH", str(highOutsideHumidity))	
+				responseData = responseData.replace("OHTSH", str(highOutsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("OHL", str(lowOutsideHumidity))	
+				responseData = responseData.replace("OHTSL", str(lowOutsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("IHH", str(highInsideHumidity)	)
+				responseData = responseData.replace("IHTSH", str(highInsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("IHL", str(lowInsideHumidity)	)
+				responseData = responseData.replace("IHTSL", str(lowInsideHumidityTimeStamp))	
+	
+				responseData = responseData.replace("BPTH", str(highBarometricPressure)	)
+				responseData = responseData.replace("BPTTSH", str(highBarometricPressureTimeStamp))	
+	
+				responseData = responseData.replace("BPTL", str(lowBarometricPressure)	)
+				responseData = responseData.replace("BPTTSL", str(lowBarometricPressureTimeStamp))	
+				
+				responseData = responseData.replace("WSTH", str(highAirSpeed)	)
+				responseData = responseData.replace("WSTTSH", str(highAirSpeedTimeStamp))	
+	
+				responseData = responseData.replace("WSTL", str(lowAirSpeed)	)
+				responseData = responseData.replace("WSTTSL", str(lowAirSpeedTimeStamp))	
+	
+
+			if (graphName == "system logs"):
+
+				# grab the system logs
+				with open ("./Templates/W-16-SL.html", "r") as myfile:
+    					responseData += myfile.read().replace('\n', '')
+		
+		        	try:
+                			print("trying database")
+                			db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                			cursor = db.cursor()
 
 
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog ORDER BY ID DESC LIMIT 20"
+                			cursor.execute(query)
+
+					rows = cursor.fetchall()
+
+					for row in rows:
+						logline = "%s:%i:%s:%s" % (row[0], row[1], row[2], row[3] )
+						line = logline+"<BR>\n<!--INSERTLOGS-->"	
+
+						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
+
+					line = "<BR>Last 20 Arduino Watchdog Log Entris<BR>\n<!--INSERTLOGS-->"	
+					responseData = responseData.replace("<!--INSERTLOGS-->", line)	
+
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='arduino' ORDER BY ID DESC LIMIT 20"
+                			cursor.execute(query)
+
+					rows = cursor.fetchall()
+
+					for row in rows:
+						logline = "%s:%i:%s:%s" % (row[0], row[1], row[2], row[3] )
+						line = logline+"<BR>\n<!--INSERTLOGS-->"	
+
+						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
+
+        			except mdb.Error, e:
+		
+                			print "Error %d: %s" % (e.args[0],e.args[1])
+
+        			finally:
+		
+                			cursor.close()
+                			db.close()
+			
+                			del cursor
+                			del db
+
+			#if responseData length is zero then we have a graph to do	
+			if (len(responseData) == 0):
+                       		if (graphName == "env temp/hum"):
+					imageName = "environmentalgraph.png"
+
+                       		elif (graphName == "env lum/fan/bar"):
+					imageName = "environmentalgraph2.png"
+
+                       		elif (graphName == "pi power volts"):
+					imageName = "systemvoltages.png"
+	
+
+                       		elif (graphName == "pi power currents"):
+					imageName = "systempower.png"
+
+
+                       		elif (graphName == "pi system stats"):
+					imageName = "systemstatistics.png"
+
+
+                       		elif (graphName == "watchdog volts"):
+					imageName = "batterywatchdogvoltage.png"
+
+
+                       		elif (graphName == "watchdog currents"):
+					imageName = "batterywatchdogcurrent.png"
+			
+
+
+
+              	 		responseData = "<html><head>"
+                		responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+                		responseData += "</head>"
+		
+                		responseData += "<body><img src=\""
+                		responseData += Config.localURL()
+                		responseData += "static/"
+                		responseData += imageName
+                		responseData += "\" type=\"jpg\" width=\"675\" height=\"296\">"
+	
+                		responseData +="</body>"
+		
+                		responseData += "</html>"
+
+			
+
+			# now finish it up
+	
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                       	outgoingXMLData += BuildResponse.buildFooter()
+                       	return outgoingXMLData
 
 	# object Type match
 	if (objectType == SINGLE_LED_DISPLAY_UITYPE):
@@ -2064,6 +2824,67 @@ def ExecuteUserObjects(objectType, element):
 			outgoingXMLData += BuildResponse.buildFooter()
                         return outgoingXMLData
 
+	# object Type match
+	if (objectType == SOUND_ALARM_UITYPE):
+		if (Config.debug()):
+			print "SOUND_ALARM_UITYPE of %s found" % objectServerID
+
+	        # SU-1 Alarm 1
+       		if (objectServerID == "SU-1"):
+
+               		#check for validate request
+               		if (validate == "YES"):
+                       		outgoingXMLData += Validate.buildValidateResponse("YES")
+                       		outgoingXMLData += BuildResponse.buildFooter()
+	
+                       		return outgoingXMLData
+
+
+
+			try:
+                        	f = open("/home/pi/ProjectCuracao/main/state/SU-1.txt", "r")
+                		responseData = f.read()
+                		f.close()
+
+			except IOError as e:
+				toggleTemp = 0
+				print "I/O error({0}): {1}".format(e.errno, e.strerror)
+				responseData = ""
+
+
+
+               		outgoingXMLData += BuildResponse.buildResponse(responseData)
+			outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+	        
+		# SU-2 Alarm 2
+       		if (objectServerID == "SU-2"):
+
+               		#check for validate request
+               		if (validate == "YES"):
+                       		outgoingXMLData += Validate.buildValidateResponse("YES")
+                       		outgoingXMLData += BuildResponse.buildFooter()
+	
+                       		return outgoingXMLData
+
+
+
+
+			try:
+                        	f = open("/home/pi/ProjectCuracao/main/state/SU-2.txt", "r")
+                		responseData = f.read()
+                		f.close()
+
+			except IOError as e:
+				toggleTemp = 0
+				print "I/O error({0}): {1}".format(e.errno, e.strerror)
+				responseData = ""
+
+
+
+               		outgoingXMLData += BuildResponse.buildResponse(responseData)
+			outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
 
 	else:
 		return ""
