@@ -40,10 +40,18 @@ import re
 sys.path.append('/home/pi/ProjectCuracao/main/hardware')
 sys.path.append('/home/pi/ProjectCuracao/main/actions')
 sys.path.append('/home/pi/ProjectCuracao/main/util')
+sys.path.append('/home/pi/ProjectCuracao/main/config')
 
 import useCamera
 import hardwareactions
 import util
+
+# Check for user imports
+try:
+	import conflocal as conf
+except ImportError:
+	import conf
+
 # end of Project Curacao files
 
 import MySQLdb as mdb
@@ -319,7 +327,7 @@ def ExecuteUserObjects(objectType, element):
 
 			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
                         f = open("/home/pi/ProjectCuracao/main/state/SU-1.txt", "w")
-                        f.write("alarm 1, Reason1-1,YES, 1005, 1, 10")
+                        f.write("Low Battery, Pi Low,YES, 1005, 1, 10")
                         f.close()
 
 			responseData = "OK"
@@ -340,7 +348,7 @@ def ExecuteUserObjects(objectType, element):
 
                         f = open("/home/pi/ProjectCuracao/main/state/SU-1.txt", "w")
 			#format =    titletext, alarmtext, alarmstate, soundvalue, how often in seconds, how many times
-                        f.write("alarm 1, Reason1-1,NO, 1005, 1, 10")
+                        f.write("Timeouts, Arduino, NO, 1005, 1, 10")
                         f.close()
 
 			responseData = "OK"
@@ -384,6 +392,25 @@ def ExecuteUserObjects(objectType, element):
                         f = open("/home/pi/ProjectCuracao/main/state/SU-2.txt", "w")
                         f.write("alarm 2, Reason2-1,NO, 1005, 1, 10")
                         f.close()
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# B-15 -  Send current picture to email in config file
+		if (objectServerID == "B-15"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			util.sendEmail("Current Picture", "Current Picture from ProjectCuracao", "Sent from PC Pi", conf.notifyAddress, conf.fromAddress, "/home/pi/RasPiConnectServer/static/picamera.jpg");
+
 
 			responseData = "OK"
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
@@ -475,6 +502,9 @@ def ExecuteUserObjects(objectType, element):
 
 				GPIO.setup(18, GPIO.OUT)
 				GPIO.output(18, True)
+				time.sleep(0.3)
+				GPIO.output(18, False)
+
                 		f = open("/home/pi/ProjectCuracao/main/state/fanstate.txt", "w")
                 		f.write("1")
                 		f.close()
@@ -486,8 +516,10 @@ def ExecuteUserObjects(objectType, element):
 
                 	elif (lowername == "turn fan off"):
 				
-				GPIO.setup(18, GPIO.OUT)
-				GPIO.output(18, False)
+				GPIO.setup(15, GPIO.OUT)
+				GPIO.output(15, True)
+				time.sleep(0.3)
+				GPIO.output(15, False)
                 		f = open("/home/pi/ProjectCuracao/main/state/fanstate.txt", "w")
                 		f.write("0")
                 		f.close()
@@ -499,8 +531,13 @@ def ExecuteUserObjects(objectType, element):
 			 # defaults to fan on (meaning fan is off)
                 	else:
                         	lowername = "turn fan on" 
-				GPIO.setup(18, GPIO.OUT)
-				GPIO.output(18, False)
+				GPIO.setup(15, GPIO.OUT)
+				GPIO.output(15, True)
+				time.sleep(0.3)
+				GPIO.output(15, False)
+                		f = open("/home/pi/ProjectCuracao/main/state/fanstate.txt", "w")
+                		f.write("0")
+                		f.close()
 
                         	responseData = lowername.title()
 
@@ -2666,9 +2703,28 @@ def ExecuteUserObjects(objectType, element):
                 			cursor.execute(query)
 
 					rows = cursor.fetchall()
+					CRITICAL=50
+					ERROR=40
+					WARNING=30
+					INFO=20
+					DEBUG=10
+					NOTSET=0
 
 					for row in rows:
-						logline = "%s:%i:%s:%s" % (row[0], row[1], row[2], row[3] )
+						level = row[1]	
+						levelName = "NONE"
+						if (level == DEBUG):
+							levelName = "DEBUG"
+						if (level == INFO):
+							levelName = "INFO"
+						if (level == WARNING):
+							levelName = "WARNING"
+						if (level == ERROR):
+							levelName = "ERROR"
+						if (level == CRITICAL):
+							levelName = "CRITICAL"
+
+						logline = "%s:%s:%s:%s" % (row[0], levelName, row[2], row[3] )
 						line = logline+"<BR>\n<!--INSERTLOGS-->"	
 
 						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
@@ -2682,7 +2738,20 @@ def ExecuteUserObjects(objectType, element):
 					rows = cursor.fetchall()
 
 					for row in rows:
-						logline = "%s:%i:%s:%s" % (row[0], row[1], row[2], row[3] )
+						level = row[1]	
+						levelName = "NONE"
+						if (level == DEBUG):
+							levelName = "DEBUG"
+						if (level == INFO):
+							levelName = "INFO"
+						if (level == WARNING):
+							levelName = "WARNING"
+						if (level == ERROR):
+							levelName = "ERROR"
+						if (level == CRITICAL):
+							levelName = "CRITICAL"
+
+						logline = "%s:%s:%s:%s" % (row[0], levelName, row[2], row[3] )
 						line = logline+"<BR>\n<!--INSERTLOGS-->"	
 
 						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
