@@ -2226,15 +2226,66 @@ def ExecuteUserObjects(objectType, element):
                         # normal response requested
 
                         responseData = "<html><head>"
-                        responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+                        responseData += "<title></title><style>body,html,iframe{margin:10;padding:0;}</style>"
                         responseData += "</head>"
 
-                        responseData += "<body>"
-			responseData += "<BR><BR>arduino Log"
+                        responseData += "<body style=font-family:'Helvetica Neue';font-size:10pt;>"
+			responseData += "<!--INSERTArduinoLOGS-->"
                         responseData +="</body>"
 
                         responseData += "</html>"
 
+
+		        try:
+                		print("trying database")
+               			db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+	
+               			cursor = db.cursor()
+
+
+				query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 20"
+                		cursor.execute(query)
+
+				rows = cursor.fetchall()
+				CRITICAL=50
+				ERROR=40
+				WARNING=30
+				INFO=20
+				DEBUG=10
+				NOTSET=0
+
+
+				line = "Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
+				responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
+				for row in rows:
+					level = row[1]	
+					levelName = "NONE"
+					if (level == DEBUG):
+						levelName = "DEBUG"
+					if (level == INFO):
+						levelName = "INFO"
+					if (level == WARNING):
+						levelName = "WARNING"
+					if (level == ERROR):
+						levelName = "ERROR"
+					if (level == CRITICAL):
+						levelName = "CRITICAL"
+
+					logline = "%s:%s:%s" % (row[0], levelName, row[3] )
+					line = logline+"<BR>\n<!--INSERTArduinoLOGS-->"	
+					responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
 
                         outgoingXMLData += BuildResponse.buildResponse(responseData)
                         outgoingXMLData += BuildResponse.buildFooter()
@@ -2699,7 +2750,7 @@ def ExecuteUserObjects(objectType, element):
                 			cursor = db.cursor()
 
 
-					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog ORDER BY ID DESC LIMIT 20"
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source != 'Ardinuo BatteryWatchDog' ORDER BY ID DESC LIMIT 20"
                 			cursor.execute(query)
 
 					rows = cursor.fetchall()
@@ -2729,14 +2780,14 @@ def ExecuteUserObjects(objectType, element):
 
 						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
 
-					line = "<BR>Last 20 Arduino Watchdog Log Entris<BR>\n<!--INSERTLOGS-->"	
-					responseData = responseData.replace("<!--INSERTLOGS-->", line)	
 
-					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='arduino' ORDER BY ID DESC LIMIT 20"
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 20"
                 			cursor.execute(query)
 
 					rows = cursor.fetchall()
 
+					line = "<BR>Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
+					responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
 					for row in rows:
 						level = row[1]	
 						levelName = "NONE"
@@ -2752,9 +2803,8 @@ def ExecuteUserObjects(objectType, element):
 							levelName = "CRITICAL"
 
 						logline = "%s:%s:%s:%s" % (row[0], levelName, row[2], row[3] )
-						line = logline+"<BR>\n<!--INSERTLOGS-->"	
-
-						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
+						line = logline+"<BR>\n<!--INSERTArduinoLOGS-->"	
+						responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
 
         			except mdb.Error, e:
 		
