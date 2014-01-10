@@ -40,17 +40,20 @@ import re
 sys.path.append('/home/pi/ProjectCuracao/main/hardware')
 sys.path.append('/home/pi/ProjectCuracao/main/actions')
 sys.path.append('/home/pi/ProjectCuracao/main/util')
+sys.path.append('/home/pi/ProjectCuracao/main/datacollect')
 sys.path.append('/home/pi/ProjectCuracao/main/config')
 
 import useCamera
 import hardwareactions
 import util
+import getArduinoLog
 
 # Check for user imports
 try:
 	import conflocal as conf
 except ImportError:
 	import conf
+
 
 # end of Project Curacao files
 
@@ -83,7 +86,7 @@ def ExecuteUserObjects(objectType, element):
 
 
         if (Config.debug()):
-        	print("objectServerID = %s" % objectServerID)
+        	print("Local objectServerID = %s" % objectServerID)
 	# 
 	# check to see if this is a Validate request
 	#
@@ -400,6 +403,9 @@ def ExecuteUserObjects(objectType, element):
 
 		# B-15 -  Send current picture to email in config file
 		if (objectServerID == "B-15"):	
+			if (Config.debug()):
+				print "ACTION_BUTTON_UTYPE of %s executing" % objectServerID
+			 
 
                 	#check for validate request
 			# validate allows RasPiConnect to verify this object is here 
@@ -416,6 +422,26 @@ def ExecuteUserObjects(objectType, element):
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
       			outgoingXMLData += BuildResponse.buildFooter()
                 	return outgoingXMLData
+
+		# B-16 -  Send current picture to email in config file
+		if (objectServerID == "B-16"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			#getArduinoLog.getArduinoLog("RasPi", 1)
+
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
 	
 	# object Type match
 	if (objectType == FEEDBACK_ACTION_BUTTON_UITYPE):
@@ -670,10 +696,10 @@ def ExecuteUserObjects(objectType, element):
                         # not validate request, so execute
 
 
-                        responseData = "XXX"
+                        responseData = "pi power volts"
 
 			if (objectName is None):
-				objectName = "XXX"
+				objectName = "pi power volts"
                         lowername = objectName.lower()
 
 
@@ -2845,6 +2871,8 @@ def ExecuteUserObjects(objectType, element):
                        		elif (graphName == "watchdog currents"):
 					imageName = "batterywatchdogcurrent.png"
 			
+				else:
+					imageName = "systemstatistics.png"
 
 
 

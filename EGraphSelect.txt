@@ -1,1 +1,1 @@
-display temp/hum
+display lum/fan/bar
