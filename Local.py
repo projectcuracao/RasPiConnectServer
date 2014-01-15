@@ -482,6 +482,15 @@ def ExecuteUserObjects(objectType, element):
 
                 	elif (lowername == "display currents"):
 
+                        	responseData = "display solar/wind" 
+                        	responseData = responseData.title()
+
+                		f = open("./local/GraphSelect.txt", "w")
+                		f.write(lowername)
+                		f.close()
+
+                	elif (lowername == "display solar/wind"):
+
                         	responseData = "display voltages" 
                         	responseData = responseData.title()
 
@@ -2006,6 +2015,10 @@ def ExecuteUserObjects(objectType, element):
 			elif (lowername == "display voltages"):
 
 				imageName = "systemvoltages.png"
+
+			elif (lowername == "display solar/wind"):
+
+				imageName = "solarwindgraph.png"
 
 			else:
 				imageName = "systempower.png"
