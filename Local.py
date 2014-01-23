@@ -42,11 +42,14 @@ sys.path.append('/home/pi/ProjectCuracao/main/actions')
 sys.path.append('/home/pi/ProjectCuracao/main/util')
 sys.path.append('/home/pi/ProjectCuracao/main/datacollect')
 sys.path.append('/home/pi/ProjectCuracao/main/config')
+sys.path.append('/home/pi/ProjectCuracao/main/state')
 
 import useCamera
 import hardwareactions
 import util
 import getArduinoLog
+import selectWind
+import selectSolar
 
 # Check for user imports
 try:
@@ -423,7 +426,7 @@ def ExecuteUserObjects(objectType, element):
       			outgoingXMLData += BuildResponse.buildFooter()
                 	return outgoingXMLData
 
-		# B-16 -  Send current picture to email in config file
+		# B-16 - Get Arduino Log 
 		if (objectServerID == "B-16"):	
 
                 	#check for validate request
@@ -435,6 +438,46 @@ def ExecuteUserObjects(objectType, element):
 
 
 			#getArduinoLog.getArduinoLog("RasPi", 1)
+
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
+	
+		# B-17 -  Select Solar Power 
+		if (objectServerID == "B-17"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			selectSolar.selectSolar("Raspi", 1)	
+
+
+			responseData = "OK"
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+	
+	
+		# B-18 -  Select Wind Power 
+		if (objectServerID == "B-18"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+
+			selectWind.selectWind("Raspi", 1)	
 
 
 			responseData = "OK"
@@ -793,14 +836,7 @@ def ExecuteUserObjects(objectType, element):
                         return outgoingXMLData
 
 	
-	# object Type match
-
-                        outgoingXMLData += BuildResponse.buildResponse(responseData)
-                        outgoingXMLData += BuildResponse.buildFooter()
-                        return outgoingXMLData
-
 	
-	# object Type match
 	# object Type match
 	if (objectType == TEXT_DISPLAY_UITYPE):
 
@@ -1439,6 +1475,57 @@ def ExecuteUserObjects(objectType, element):
 
 
 
+		#LT-23 is state of charging system 
+		
+		if (objectServerID == "LT-23"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT SolarWind FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				solarState = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+
+			if (solarState == 0):
+				myState = "Solar Selected"
+			else:
+				myState = "Wind Selected"
+
+			myString = "%s" % myState 
+
+			responseData = "%s, %s, %s" % (myString, myString,"Pi Charging System")
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
 	# object Type match
 	if (objectType == VOLTMETER_UITYPE):
 
@@ -1885,6 +1972,48 @@ def ExecuteUserObjects(objectType, element):
 
 			servoValue = hardwareactions.readCameraServo()
 			responseData = "%4.1f" % servoValue
+			print "%s = %s" % (objectServerID, responseData)
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+		# Outside Temperature 
+		if (objectServerID == "M-23"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT UnregulatedWindVoltage FROM batterywatchdogdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				temperature = result[0]
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % temperature
 			print "%s = %s" % (objectServerID, responseData)
 
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
