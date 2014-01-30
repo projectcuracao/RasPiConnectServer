@@ -47,7 +47,7 @@ sys.path.append('/home/pi/ProjectCuracao/main/state')
 import useCamera
 import hardwareactions
 import util
-import getArduinoLog
+# import getArduinoLog
 import selectWind
 import selectSolar
 
@@ -812,6 +812,15 @@ def ExecuteUserObjects(objectType, element):
                                 f.close()
 
                         elif (lowername == "watchdog currents"):
+
+                                responseData = "solar/wind" 
+                                responseData = responseData.title()
+
+                                f = open("./local/SumPageGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "solar/wind"):
 
                                 responseData = "env temp/hum" 
                                 responseData = responseData.title()
@@ -3012,6 +3021,9 @@ def ExecuteUserObjects(objectType, element):
 
                        		elif (graphName == "watchdog currents"):
 					imageName = "batterywatchdogcurrent.png"
+			
+                       		elif (graphName == "solar/wind"):
+					imageName = "solarwindgraph.png"
 			
 				else:
 					imageName = "systemstatistics.png"
