@@ -845,6 +845,135 @@ def ExecuteUserObjects(objectType, element):
                         return outgoingXMLData
 
 	
+                # FB-16 - camera exposure 
+                if (objectServerID == "FB-16"):
+
+                        #check for validate request
+                        # validate allows RasPiConnect to verify this object is here
+                        if (validate == "YES"):
+                                outgoingXMLData += Validate.buildValidateResponse("YES")
+                                outgoingXMLData += BuildResponse.buildFooter()
+                                return outgoingXMLData
+
+                        # not validate request, so execute
+
+
+                        responseData = "auto"
+
+			if (objectName is None):
+				objectName = "auto"
+                        lowername = objectName.lower()
+			#off,auto,sun,cloud,shade,tungsten,fluorescent,incandescent,flash,horizon
+
+                        if (lowername == "auto"):
+
+                                responseData = "sun"
+                                responseData = responseData.title()
+
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                        	
+                                f.write(lowername)
+                                f.close()
+
+
+                        elif (lowername == "sun"):
+
+                                responseData = "cloud"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "cloud"):
+
+                                responseData = "shade"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "shade"):
+
+                                responseData = "tungsten"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "tungsten"):
+
+                                responseData = "flourescent"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "flourescent"):
+
+                                responseData = "incandescent"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "incandescent"):
+
+                                responseData = "flash"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "flash"):
+
+                                responseData = "horizon"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "horizon"):
+
+                                responseData = "off"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "off"):
+
+                                responseData = "auto"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+
+                        # defaults to display currents
+                        else:
+                                
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                                responseData = "sun" 
+                                responseData = lowername.title()
+
+
+                        outgoingXMLData += BuildResponse.buildResponse(responseData)
+                        outgoingXMLData += BuildResponse.buildFooter()
+                        return outgoingXMLData
+
 	
 	# object Type match
 	if (objectType == TEXT_DISPLAY_UITYPE):
@@ -1530,6 +1659,39 @@ def ExecuteUserObjects(objectType, element):
 			myString = "%s" % myState 
 
 			responseData = "%s, %s, %s" % (myString, myString,"Pi Charging System")
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+
+
+
+		#LT-24 is current exposure state 
+		
+		if (objectServerID == "LT-24"):	
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+
+			try:
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "r")
+                		tempString = f.read()
+                		f.close()
+				lowername = tempString 		
+
+			except IOError as e:
+				print "I/O error({0}): {1}".format(e.errno, e.strerror)
+
+
+			myString = "%s" % tempString 
+
+			responseData = "%s, %s, %s" % (myString, myString,"Current Exposure")
 
                 	outgoingXMLData += BuildResponse.buildResponse(responseData)
       			outgoingXMLData += BuildResponse.buildFooter()
@@ -2430,9 +2592,12 @@ def ExecuteUserObjects(objectType, element):
 				INFO=20
 				DEBUG=10
 				NOTSET=0
+			
+				line = "System Time: "
+				line +=  time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+				line += "<BR>\n"
 
-
-				line = "Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
+				line += "Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
 				responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
 				for row in rows:
 					level = row[1]	
@@ -2918,6 +3083,9 @@ def ExecuteUserObjects(objectType, element):
 
 				# grab the system logs
 				with open ("./Templates/W-16-SL.html", "r") as myfile:
+					responseData = "System Time: "
+					responseData +=  time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
+					responseData += "<BR>\n"
     					responseData += myfile.read().replace('\n', '')
 		
 		        	try:
