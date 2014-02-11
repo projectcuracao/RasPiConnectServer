@@ -2327,6 +2327,7 @@ def ExecuteUserObjects(objectType, element):
 
               	 	responseData = "<html><head>"
                 	responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                 	responseData += "</head>"
 	
                 	responseData += "<body><img src=\""
@@ -2365,6 +2366,7 @@ def ExecuteUserObjects(objectType, element):
 
 
               	 	responseData = "<html><head>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                 	responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
                 	responseData += "</head>"
 	
@@ -2426,6 +2428,7 @@ def ExecuteUserObjects(objectType, element):
 
 
                         responseData = "<html><head>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                         responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
                         responseData += "</head>"
 
@@ -2462,6 +2465,7 @@ def ExecuteUserObjects(objectType, element):
 
 
                         responseData = "<html><head>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                         responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
                         responseData += "</head>"
 
@@ -2530,6 +2534,7 @@ def ExecuteUserObjects(objectType, element):
 
 
                         responseData = "<html><head>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                         responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
                         responseData += "</head>"
 
@@ -2565,6 +2570,7 @@ def ExecuteUserObjects(objectType, element):
                         # normal response requested
 
                         responseData = "<html><head>"
+			responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                         responseData += "<title></title><style>body,html,iframe{margin:10;padding:0;}</style>"
                         responseData += "</head>"
 
@@ -3199,6 +3205,7 @@ def ExecuteUserObjects(objectType, element):
 
 
               	 		responseData = "<html><head>"
+				responseData += "<META HTTP-EQUIV='CACHE-CONTROL' CONTENT='NO-CACHE'>"
                 		responseData += "<title></title><style>body,html,iframe{margin:0;padding:0;}</style>"
                 		responseData += "</head>"
 		

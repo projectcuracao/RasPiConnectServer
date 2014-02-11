@@ -1,1 +1,1 @@
-display voltages
+display solar/wind
