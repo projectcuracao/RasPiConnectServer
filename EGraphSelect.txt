@@ -1,1 +1,1 @@
-display lum/fan/bar
+display color

@@ -1,1 +1,1 @@
-display currents
+display voltages

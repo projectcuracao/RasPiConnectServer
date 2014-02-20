@@ -1,1 +1,1 @@
-System Logs
+env lum/fan/bar

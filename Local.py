@@ -658,6 +658,15 @@ def ExecuteUserObjects(objectType, element):
 
                         elif (lowername == "display temp/hum"):
 
+                                responseData = "display color"
+                                responseData = responseData.title()
+
+                                f = open("./local/EGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "display color"):
+
                                 responseData = "display lum/fan/bar"
                                 responseData = responseData.title()
 
@@ -864,10 +873,11 @@ def ExecuteUserObjects(objectType, element):
 				objectName = "auto"
                         lowername = objectName.lower()
 			#off,auto,sun,cloud,shade,tungsten,fluorescent,incandescent,flash,horizon
+			#auto,night,nightpreview,backlight,spotlight,sports,snow,beach,verylong,fixedfps,antishake,fireworks
 
                         if (lowername == "auto"):
 
-                                responseData = "sun"
+                                responseData = "night"
                                 responseData = responseData.title()
 
 
@@ -877,79 +887,97 @@ def ExecuteUserObjects(objectType, element):
                                 f.close()
 
 
-                        elif (lowername == "sun"):
+                        elif (lowername == "night"):
 
-                                responseData = "cloud"
+                                responseData = "nightpreview"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "cloud"):
+                        elif (lowername == "nightpreview"):
 
-                                responseData = "shade"
+                                responseData = "backlight"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "shade"):
+                        elif (lowername == "backlight"):
 
-                                responseData = "tungsten"
+                                responseData = "spotlight"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "tungsten"):
+                        elif (lowername == "spotlight"):
 
-                                responseData = "flourescent"
+                                responseData = "sports"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "flourescent"):
+                        elif (lowername == "sports"):
 
-                                responseData = "incandescent"
+                                responseData = "snow"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "incandescent"):
+                        elif (lowername == "snow"):
 
-                                responseData = "flash"
+                                responseData = "beach"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "flash"):
+                        elif (lowername == "beach"):
 
-                                responseData = "horizon"
+                                responseData = "verylong"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "horizon"):
+                        elif (lowername == "verylong"):
 
-                                responseData = "off"
+                                responseData = "fixedfps"
                                 responseData = responseData.title()
 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
                                 f.write(lowername)
                                 f.close()
 
-                        elif (lowername == "off"):
+                        elif (lowername == "fixedfps"):
+
+                                responseData = "antishake"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "antishake"):
+
+                                responseData = "fireworks"
+                                responseData = responseData.title()
+
+               			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "fireworks"):
 
                                 responseData = "auto"
                                 responseData = responseData.title()
@@ -959,7 +987,7 @@ def ExecuteUserObjects(objectType, element):
                                 f.close()
 
 
-                        # defaults to display currents
+                        # defaults to auto 
                         else:
                                 
                			f = open("/home/pi/ProjectCuracao/main/state/exposure.txt", "w")
@@ -2421,6 +2449,10 @@ def ExecuteUserObjects(objectType, element):
                         elif (lowername == "display temp/hum"):
 
 				imageName = "environmentalgraph.png"
+
+                        elif (lowername == "display color"):
+
+				imageName = "environmentalcolorgraph.png"
 
                         else:
 				imageName = "environmentalgraph.png"
