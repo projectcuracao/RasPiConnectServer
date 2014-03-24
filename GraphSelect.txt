@@ -1,1 +1,1 @@
-display solar/wind
+display currents
