@@ -51,6 +51,8 @@ import util
 import selectWind
 import selectSolar
 
+import getFramArduinoLog
+
 # Check for user imports
 try:
 	import conflocal as conf
@@ -667,6 +669,24 @@ def ExecuteUserObjects(objectType, element):
 
                         elif (lowername == "display color"):
 
+                                responseData = "display rain"
+                                responseData = responseData.title()
+
+                                f = open("./local/EGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "display rain"):
+
+                                responseData = "display wind power"
+                                responseData = responseData.title()
+
+                                f = open("./local/EGraphSelect.txt", "w")
+                                f.write(lowername)
+                                f.close()
+
+                        elif (lowername == "display wind power"):
+
                                 responseData = "display lum/fan/bar"
                                 responseData = responseData.title()
 
@@ -1003,6 +1023,33 @@ def ExecuteUserObjects(objectType, element):
                         return outgoingXMLData
 
 	
+		
+		# FB-18 - read FRAM 
+		if (objectServerID == "FB-18"):	
+
+                	#check for validate request
+			# validate allows RasPiConnect to verify this object is here 
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+                        	return outgoingXMLData
+
+			# not validate request, so execute
+
+               		responseData = "XXX"
+			if (objectName is None):
+				objectName = "XXX"
+
+
+			count = getFramArduinoLog.getFramArduinoLog("RasPiConnect",1)
+			lowername = "%i FRAM Records Read" % count
+                        responseData = lowername.title()
+
+	
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
 	# object Type match
 	if (objectType == TEXT_DISPLAY_UITYPE):
 
@@ -1726,13 +1773,64 @@ def ExecuteUserObjects(objectType, element):
                 	return outgoingXMLData
 
 	# object Type match
+	if (objectType == SPEEDOMETER_UITYPE):
+
+
+		if (Config.debug()):
+			print "SPEEDOMETER_UITYPE of %s found" % objectServerID
+
+
+                # Wind Speed 
+                if (objectServerID == "M-2"):
+
+        	        #check for validate request
+                	if (validate == "YES"):
+                        	outgoingXMLData += Validate.buildValidateResponse("YES")
+                        	outgoingXMLData += BuildResponse.buildFooter()
+
+                        	return outgoingXMLData
+
+		        try:
+                		print("trying database")
+                		db = mdb.connect('localhost', 'root', 'bleh0101', 'ProjectCuracao');
+		
+                		cursor = db.cursor()
+
+
+				query = "SELECT CWS FROM weatherdata ORDER BY ID DESC LIMIT 1"
+                		cursor.execute(query)
+                		result = cursor.fetchone()
+				print result
+				voltage = result[0]
+				print "voltage= %3.2f" % voltage
+
+
+        		except mdb.Error, e:
+		
+                		print "Error %d: %s" % (e.args[0],e.args[1])
+
+        		finally:
+		
+                		cursor.close()
+                		db.close()
+		
+                		del cursor
+                		del db
+
+			responseData = "%3.2f" % voltage
+
+                	outgoingXMLData += BuildResponse.buildResponse(responseData)
+      			outgoingXMLData += BuildResponse.buildFooter()
+                	return outgoingXMLData
+
+	# object Type match
 	if (objectType == VOLTMETER_UITYPE):
 
 		if (Config.debug()):
 			print "VOLTMETER_UITYPE of %s found" % objectServerID
 
 
-		#M-10 is Pi Voltage
+	#M-10 is Pi Voltage
 		if (objectServerID == "M-10"):	
 
         	        #check for validate request
@@ -2450,10 +2548,18 @@ def ExecuteUserObjects(objectType, element):
 
 				imageName = "environmentalgraph.png"
 
+
                         elif (lowername == "display color"):
 
 				imageName = "environmentalcolorgraph.png"
+                        
+			elif (lowername == "display wind power"):
 
+				imageName = "windpowergraph.png"
+			
+			elif (lowername == "display rain"):
+
+				imageName = "raingraph.png"
                         else:
 				imageName = "environmentalgraph.png"
 
@@ -2620,7 +2726,7 @@ def ExecuteUserObjects(objectType, element):
                			cursor = db.cursor()
 
 
-				query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 20"
+				query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 30"
                 		cursor.execute(query)
 
 				rows = cursor.fetchall()
@@ -2635,7 +2741,7 @@ def ExecuteUserObjects(objectType, element):
 				line +=  time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime())
 				line += "<BR>\n"
 
-				line += "Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
+				line += "Last 30 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
 				responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
 				for row in rows:
 					level = row[1]	
@@ -3133,7 +3239,7 @@ def ExecuteUserObjects(objectType, element):
                 			cursor = db.cursor()
 
 
-					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source != 'Ardinuo BatteryWatchDog' ORDER BY ID DESC LIMIT 20"
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source != 'Ardinuo BatteryWatchDog' ORDER BY ID DESC LIMIT 30"
                 			cursor.execute(query)
 
 					rows = cursor.fetchall()
@@ -3164,12 +3270,12 @@ def ExecuteUserObjects(objectType, element):
 						responseData = responseData.replace("<!--INSERTLOGS-->", line)	
 
 
-					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 20"
+					query = "SELECT TimeStamp, Level, Source, Message FROM systemlog WHERE Source ='Ardinuo BatteryWatchDog' ORDER BY TimeStamp DESC LIMIT 30"
                 			cursor.execute(query)
 
 					rows = cursor.fetchall()
 
-					line = "<BR>Last 20 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
+					line = "<BR>Last 30 Arduino Watchdog Log Entries<BR>\n<!--INSERTArduinoLOGS-->"	
 					responseData = responseData.replace("<!--INSERTArduinoLOGS-->", line)	
 					for row in rows:
 						level = row[1]	
